@@ -28,10 +28,10 @@ class App extends Component {
 
   renderChart() {
     const data = this.state.wordFrequency.sort((a,b)=>b[1]-a[1]).slice(0,5)
-    data.forEach(item =>{
-      <div>item[0]</div>
-      console.log(item)
-    })
+    d3.select(".svg_parent").selectAll("span").data(data).join(
+      enter=> enter.append("span").text(d => d).style("opacity", 0).transition().duration(1000).ease(d3.easeLinear).style("opacity", 1)
+    )
+    
     console.log(data)
     // your code here
     

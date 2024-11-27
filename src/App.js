@@ -27,14 +27,20 @@ class App extends Component {
 
 
   renderChart() {
-    const data = this.state.wordFrequency.sort((a,b)=>b[1]-a[1]).slice(0,5)
-    d3.select(".svg_parent").selectAll("span").data(data).join(
-      enter=> enter.append("span").text(d => d).style("opacity", 0).style("border", "1px solid red").transition().duration(1000).ease(d3.easeLinear).style("opacity", 1)
-    )
-    
+    const data = this.state.wordFrequency.sort((a,b)=>b[1]-a[1]).slice(0,5)    
     console.log(data)
     // your code here
+    const maxSize = 50;
+    const minSize = 10;
+    const maxValue = Math.max(...data.map(d=>d[1]));
+
+    const fontScale = d3.scaleLinear().domain([0, maxValue]).range(minSize,maxSize)
     
+    d3.select(".svg_parent").selectAll("text").data(data).join(
+      enter => enter.append("text").text(d=>d[0]).style("opacity", 0).style("font-size", d=>fontScale(d[1] +"px")).transition().duration(1000).ease(d3.easeLinear).style("opacity", 1),
+      update => update.style("font-size", d=>fontScale(d[1] + "px")),
+      exit => exit.remove()
+    )
   }
 
   render() {
